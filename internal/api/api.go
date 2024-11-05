@@ -11,7 +11,10 @@ import (
 )
 
 func SendRequest(lat float32, long float32) *internal.WheaterResponse {
-	res, err := http.Get("https://api.open-meteo.com/v1/forecast?latitude=" + strconv.FormatFloat(float64(lat), 'f', -1, 32) + "&longitude=" + strconv.FormatFloat(float64(long), 'f', -1, 32) + "&current=temperature_2m,weather_code&daily=uv_index_max&timezone=auto&forecast_days=1")
+	latStr := strconv.FormatFloat(float64(lat), 'f', -1, 32)
+	longStr := strconv.FormatFloat(float64(long), 'f', -1, 32)
+	url := "https://api.open-meteo.com/v1/forecast?latitude=" + latStr + "&longitude=" + longStr + "&current=temperature_2m,weather_code&daily=uv_index_max&timezone=auto&forecast_days=1"
+	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
 	}
