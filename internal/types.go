@@ -1,24 +1,30 @@
 package internal
 
-type WheaterResponse struct {
+type WeatherResponse struct {
 	Current Current `json:"current"`
 	Daily   Daily   `json:"daily"`
 }
+
 type (
-	WeatherCode int
-	Current     struct {
-		Temperature float32     `json:"temperature_2m"`
-		WheaterCode WeatherCode `json:"wheater_code"`
+	Current struct {
+		WeatherCode         WeatherCode `json:"weather_code"`
+		Temperature         float32     `json:"temperature_2m"`
+		ApparentTemperature float32     `json:"apparent_temperature"`
 	}
 )
 
 type Daily struct {
-	UvIndex []float32 `json:"uv_index_max"`
+	Date           []string      `json:"time"`
+	UvIndex        []float32     `json:"uv_index_max"`
+	MaxTemperature []float32     `json:"temperature_2m_max"`
+	MinTemperature []float32     `json:"temperature_2m_min"`
+	WeatherCode    []WeatherCode `json:"weather_code"`
 }
 
-const (
-	ClearSky WeatherCode = 0
+type WeatherCode int
 
+const (
+	ClearSky     WeatherCode = 0
 	MainlyClear  WeatherCode = 1
 	PartlyCloudy WeatherCode = 2
 	Overcast     WeatherCode = 3
@@ -50,63 +56,55 @@ const (
 	RainShowersModerate WeatherCode = 81
 	RainShowersViolent  WeatherCode = 82
 
-	SnowShowersSlight WeatherCode = 85
-	SnowShowersHeavy  WeatherCode = 86
+	SnowShowersSlight           WeatherCode = 85
+	SnowShowersHeavy            WeatherCode = 86
+	ThunderstormSlightModerated WeatherCode = 95
+	ThunderstormSlight          WeatherCode = 96
+	ThunderstormHeavyHail       WeatherCode = 99
 )
 
-func (wc WeatherCode) String() string {
-	switch wc {
-	case ClearSky:
-		return "Clear sky"
-	case MainlyClear:
-		return "Mainly clear"
-	case PartlyCloudy:
-		return "Partly cloudy"
-	case Overcast:
-		return "Overcast"
-	case Fog:
-		return "Fog"
-	case DepositingRimeFog:
-		return "Depositing rime fog"
-	case DrizzleLight:
-		return "Drizzle: Light intensity"
-	case DrizzleModerate:
-		return "Drizzle: Moderate intensity"
-	case DrizzleDense:
-		return "Drizzle: Dense intensity"
-	case FreezingDrizzleLight:
-		return "Freezing Drizzle: Light intensity"
-	case FreezingDrizzleDense:
-		return "Freezing Drizzle: Dense intensity"
-	case RainSlight:
-		return "Rain: Slight intensity"
-	case RainModerate:
-		return "Rain: Moderate intensity"
-	case RainHeavy:
-		return "Rain: Heavy intensity"
-	case FreezingRainLight:
-		return "Freezing Rain: Light intensity"
-	case FreezingRainHeavy:
-		return "Freezing Rain: Heavy intensity"
-	case SnowFallSlight:
-		return "Snow fall: Slight intensity"
-	case SnowFallModerate:
-		return "Snow fall: Moderate intensity"
-	case SnowFallHeavy:
-		return "Snow fall: Heavy intensity"
-	case SnowGrains:
-		return "Snow grains"
-	case RainShowersSlight:
-		return "Rain showers: Slight intensity"
-	case RainShowersModerate:
-		return "Rain showers: Moderate intensity"
-	case RainShowersViolent:
-		return "Rain showers: Violent intensity"
-	case SnowShowersSlight:
-		return "Snow showers: Slight intensity"
-	case SnowShowersHeavy:
-		return "Snow showers: Heavy intensity"
-	default:
-		return "Unknown weather code"
+var weatherDescriptions = map[WeatherCode]string{
+	ClearSky:                    "Clear sky",
+	MainlyClear:                 "Mainly clear",
+	PartlyCloudy:                "Partly cloudy",
+	Overcast:                    "Overcast",
+	Fog:                         "Fog",
+	DepositingRimeFog:           "Depositing rime fog",
+	DrizzleLight:                "Drizzle: Light intensity",
+	DrizzleModerate:             "Drizzle: Moderate intensity",
+	DrizzleDense:                "Drizzle: Dense intensity",
+	FreezingDrizzleLight:        "Freezing Drizzle: Light intensity",
+	FreezingDrizzleDense:        "Freezing Drizzle: Dense intensity",
+	RainSlight:                  "Rain: Slight intensity",
+	RainModerate:                "Rain: Moderate intensity",
+	RainHeavy:                   "Rain: Heavy intensity",
+	FreezingRainLight:           "Freezing Rain: Light intensity",
+	FreezingRainHeavy:           "Freezing Rain: Heavy intensity",
+	SnowFallSlight:              "Snow fall: Slight intensity",
+	SnowFallModerate:            "Snow fall: Moderate intensity",
+	SnowFallHeavy:               "Snow fall: Heavy intensity",
+	SnowGrains:                  "Snow grains",
+	RainShowersSlight:           "Rain showers: Slight intensity",
+	RainShowersModerate:         "Rain showers: Moderate intensity",
+	RainShowersViolent:          "Rain showers: Violent intensity",
+	SnowShowersSlight:           "Snow showers: Slight intensity",
+	SnowShowersHeavy:            "Snow showers: Heavy intensity",
+	ThunderstormSlightModerated: "Thunderstorm: Slight or moderate",
+	ThunderstormSlight:          "Thunderstorm with slight and heavy hail",
+	ThunderstormHeavyHail:       "Thunderstorm with slight and heavy hail",
+}
+
+func WeatherToString(wc WeatherCode) string {
+	if desc, exists := weatherDescriptions[wc]; exists {
+		return desc
 	}
+	return "Unknown weather code"
+}
+
+func SWeatherToString(wc []WeatherCode) []string {
+	result := make([]string, len(wc))
+	for i, code := range wc {
+		result[i] = WeatherToString(WeatherCode(code))
+	}
+	return result
 }
