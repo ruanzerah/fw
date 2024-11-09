@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-	req, err := api.SendRequest(15, -7.8825, 40.0817)
+	// TODO: find a better way to search weather with locations (lat , long)
+	req, err := api.SendRequest(5, 7)
 	if err != nil {
 		log.Fatal(err)
 	}
