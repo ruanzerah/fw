@@ -13,11 +13,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(req.Daily.MaxTemperature)
+	p, err := internal.CreateCurrentPanel(req.Current)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	str := internal.SWeatherToString(req.Daily.WeatherCode)
-	fmt.Println(str)
-	fmt.Println(req.Daily.MinTemperature)
-	fmt.Println("_______________________________________________________")
-	fmt.Printf("daily: %v , current: %v ", req.Daily, req.Current)
+	n, err := internal.CreateDailyPanel(req.Daily)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(p)
+	fmt.Print("")
+	fmt.Println(n)
 }

@@ -1,5 +1,11 @@
 package internal
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 type WeatherResponse struct {
 	Current Current `json:"current"`
 	Daily   Daily   `json:"daily"`
@@ -107,4 +113,53 @@ func SWeatherToString(wc []WeatherCode) []string {
 		result[i] = WeatherToString(WeatherCode(code))
 	}
 	return result
+}
+
+func CreateCurrentPanel(current Current) (string, error) {
+	weatherLen := len(WeatherToString(current.WeatherCode))
+	weatherFormatter := strings.Repeat(" ", weatherLen-6)
+	header := "| Date       | Temp  | Apparent Temp | Weather" + weatherFormatter + "|\n"
+	lenStr := strconv.Itoa(weatherLen)
+	currentRow := fmt.Sprintf("| %-10s | %-5.1f | %-13.1f | "+"%-"+lenStr+"s"+" |\n",
+		"Now",
+		current.Temperature,
+		current.ApparentTemperature,
+		WeatherToString(current.WeatherCode),
+	)
+	divider := strings.Repeat("-", len(currentRow)-1) + "\n"
+	panel := divider + header + divider + currentRow + divider
+
+	return panel, nil
+}
+
+func FindBiggestWeatherLen(wc []WeatherCode) int {
+	biggest := 0
+	for i, code := range wc {
+		if len(WeatherToString(wc[i])) >= biggest {
+			biggest = len(WeatherToString(code))
+		}
+	}
+	return biggest
+}
+
+func CreateDailyPanel(daily Daily) (string, error) {
+	weatherLen := FindBiggestWeatherLen(daily.WeatherCode)
+	weatherFormatter := strings.Repeat(" ", weatherLen-7)
+	headers := "| Date       | Max Temp | Min Temp | Weather " + weatherFormatter + "|\n"
+
+	divider := strings.Repeat("-", len(headers)-1) + "\n"
+	panel := divider + headers + divider
+	lenStr := strconv.Itoa(weatherLen)
+	for i := 0; i < len(daily.Date); i++ {
+		row := fmt.Sprintf("| %-10s | %-8.1f | %-8.1f | %- "+lenStr+"s"+" |\n",
+			daily.Date[i],
+			daily.MaxTemperature[i],
+			daily.MinTemperature[i],
+			WeatherToString(daily.WeatherCode[i]),
+		)
+
+		panel += row
+	}
+	panel += divider
+	return panel, nil
 }
