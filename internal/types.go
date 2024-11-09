@@ -29,6 +29,13 @@ type Daily struct {
 
 type WeatherCode int
 
+type GeoLoc struct {
+	Results []struct {
+		Lat float64 `json:"lat"`
+		Lon float64 `json:"lon"`
+	} `json:"results"`
+}
+
 const (
 	ClearSky     WeatherCode = 0
 	MainlyClear  WeatherCode = 1
