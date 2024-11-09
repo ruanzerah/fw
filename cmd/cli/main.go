@@ -13,15 +13,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	p, err := internal.CreateCurrentPanel(req.Current)
-	if err != nil {
-		log.Fatal(err)
-	}
+	p := internal.CreateCurrentPanel(req.Current)
 
-	n, err := internal.CreateDailyPanel(req.Daily)
-	if err != nil {
-		log.Fatal(err)
-	}
+	n := internal.CreateDailyPanel(req.Daily)
 	fmt.Print(p)
 	fmt.Print("")
 	fmt.Println(n)

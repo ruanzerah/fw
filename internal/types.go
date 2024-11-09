@@ -115,7 +115,7 @@ func SWeatherToString(wc []WeatherCode) []string {
 	return result
 }
 
-func CreateCurrentPanel(current Current) (string, error) {
+func CreateCurrentPanel(current Current) string {
 	weatherLen := len(WeatherToString(current.WeatherCode))
 	weatherFormatter := strings.Repeat(" ", weatherLen-6)
 	header := "| Date       | Temp  | Apparent Temp | Weather" + weatherFormatter + "|\n"
@@ -129,7 +129,7 @@ func CreateCurrentPanel(current Current) (string, error) {
 	divider := strings.Repeat("-", len(currentRow)-1) + "\n"
 	panel := divider + header + divider + currentRow + divider
 
-	return panel, nil
+	return panel
 }
 
 func FindBiggestWeatherLen(wc []WeatherCode) int {
@@ -142,7 +142,7 @@ func FindBiggestWeatherLen(wc []WeatherCode) int {
 	return biggest
 }
 
-func CreateDailyPanel(daily Daily) (string, error) {
+func CreateDailyPanel(daily Daily) string {
 	weatherLen := FindBiggestWeatherLen(daily.WeatherCode)
 	weatherFormatter := strings.Repeat(" ", weatherLen-7)
 	headers := "| Date       | Max Temp | Min Temp | Weather " + weatherFormatter + "|\n"
@@ -161,5 +161,5 @@ func CreateDailyPanel(daily Daily) (string, error) {
 		panel += row
 	}
 	panel += divider
-	return panel, nil
+	return panel
 }
