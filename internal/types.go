@@ -72,7 +72,7 @@ const (
 	SnowShowersSlight           WeatherCode = 85
 	SnowShowersHeavy            WeatherCode = 86
 	ThunderstormSlightModerated WeatherCode = 95
-	ThunderstormSlight          WeatherCode = 96
+	ThunderstormSlightHail      WeatherCode = 96
 	ThunderstormHeavyHail       WeatherCode = 99
 )
 
@@ -103,7 +103,7 @@ var weatherDescriptions = map[WeatherCode]string{
 	SnowShowersSlight:           "Snow showers: Slight intensity",
 	SnowShowersHeavy:            "Snow showers: Heavy intensity",
 	ThunderstormSlightModerated: "Thunderstorm: Slight or moderate",
-	ThunderstormSlight:          "Thunderstorm with slight and heavy hail",
+	ThunderstormSlightHail:      "Thunderstorm with slight hail",
 	ThunderstormHeavyHail:       "Thunderstorm with slight and heavy hail",
 }
 
